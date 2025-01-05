@@ -12,14 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role'];
+        $_SESSION['user_id'] = $user['id']; 
 
         // Redirect based on role
         if ($user['role'] == 'superuser') {
             header("Location: dashboard.php?role=superuser");
         } elseif ($user['role'] == 'admin') {
-            header("Location: dashboard.php?role=admin");
+            header("Location: admin_dashboard.php?role=admin");
         } else {
-            header("Location: dashboard.php?role=user");
+            header("Location: user_dashboard.php?role=user");
         }
         exit;
     } else {
