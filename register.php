@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php if (isset($error)) echo "<p>$error</p>"; ?>
             
             <div class="register-link">
-                <p>Sudah punya akun? <a href="login.php">Login</a></p>
+                <p style="color: white;">Sudah punya akun? <a href="login.php" class="underline">Login</a></p>
             </div>
             
         </form>
