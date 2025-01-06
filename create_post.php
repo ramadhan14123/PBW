@@ -30,7 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $conn->prepare("INSERT INTO posts (user_id, title, image, created_at) VALUES (?, ?, ?, NOW())");
             $stmt->bind_param("iss", $_SESSION['user_id'], $title, $uploadFile);
             if ($stmt->execute()) {
-                echo "Post berhasil dibuat!";
+                // Setelah berhasil menyimpan, arahkan ke user_dashboard.php
+                header("Location: user_dashboard.php");
+                exit();
             } else {
                 echo "Terjadi kesalahan saat menyimpan postingan.";
             }
