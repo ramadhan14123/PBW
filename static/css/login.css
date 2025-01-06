@@ -10,15 +10,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     padding: 20px;
 }
 
 .login-container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(45, 45, 45, 0.95);
     padding: 40px 30px;
     border-radius: 15px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
     width: 100%;
     max-width: 400px;
     transform: translateY(20px);
@@ -39,13 +39,13 @@ body {
 }
 
 .login-header h2 {
-    color: #333;
+    color: #ffd700;
     font-size: 2em;
     margin-bottom: 10px;
 }
 
 .login-header p {
-    color: #666;
+    color: #ffffff;
     font-size: 0.9em;
 }
 
@@ -59,31 +59,33 @@ body {
     left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #666;
+    color: #ffd700;
 }
 
 .input-group input {
     width: 100%;
     padding: 15px 15px 15px 45px;
-    border: 2px solid #ddd;
+    border: 2px solid #333333;
     border-radius: 8px;
     font-size: 1em;
+    background: #1a1a1a;
+    color: #ffffff;
     transition: all 0.3s ease;
 }
 
 .input-group input:focus {
-    border-color: #764ba2;
+    border-color: #ffd700;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.2);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
 }
 
 .submit-btn {
     width: 100%;
     padding: 15px;
-    background: #764ba2;
+    background: #ffd700;
     border: none;
     border-radius: 8px;
-    color: white;
+    color: #1a1a1a;
     font-size: 1em;
     font-weight: 600;
     cursor: pointer;
@@ -91,12 +93,12 @@ body {
 }
 
 .submit-btn:hover {
-    background: #667eea;
+    background: #ffed4a;
     transform: translateY(-2px);
 }
 
 .error-message {
-    background: #ff6b6b;
+    background: #ff4444;
     color: white;
     padding: 10px;
     border-radius: 5px;
@@ -111,14 +113,22 @@ body {
 }
 
 .register-link a {
-    color: #764ba2;
+    color: #ffd700;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .register-link a:hover {
-    color: #667eea;
+    color: #ffed4a;
+}
+
+.underline{
+    text-emphasis: none;
+}
+
+.underline:hover{
+    text-decoration: underline;
 }
 
 @media (max-width: 480px) {

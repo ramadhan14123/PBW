@@ -51,7 +51,8 @@ while ($post = $result_posts->fetch_assoc()) {
     $user_name = $user_result->fetch_assoc()['username'];
 
     // Menampilkan gambar jika ada
-    $image = !empty($post['image']) ? "<img src='uploads/{$post['image']}' alt='Image' width='100'/>" : "No Image";
+    $image = !empty($post['image']) ? "<img src='{$post['image']}' alt='Image' width='100'/>" : "No Image";
+
 
     echo "<tr>
             <td>" . htmlspecialchars($post['title']) . "</td>
