@@ -322,7 +322,7 @@ $conn->close();
                 <p class="title">Main</p>
                 <ul>
                     <li>
-                        <a href="user_dashboard.php">
+                        <a href="user_posts.php">
                             <i class="ph-bold ph-house-simple"></i>
                             <span class="text">Dashboard</span>
                         </a>
