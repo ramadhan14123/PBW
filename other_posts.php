@@ -27,7 +27,6 @@ $result_all_posts = $conn->query($query_all_posts);
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="static/css/other_posts.css">
-   
 </head>
 <body>
     <div class="sidebar">
@@ -116,8 +115,6 @@ $result_all_posts = $conn->query($query_all_posts);
             $('.menu-btn').click(function() {
                 $('.sidebar').toggleClass('active');
             });
-
-            // Toggle submenu
             $('.menu ul li a').click(function(e) {
                 if($(this).find('.arrow').length > 0) {
                     e.preventDefault();

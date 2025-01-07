@@ -105,7 +105,6 @@ $result_user_posts = $stmt_user_posts->get_result();
                     </div>
                 <?php endwhile;
             else: ?>
-            
 
             <?php endif; ?>
         </div>
@@ -118,7 +117,6 @@ $result_user_posts = $stmt_user_posts->get_result();
              </div>
         </div>
     </div>
-    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js"></script>
     <script>
@@ -127,7 +125,9 @@ $result_user_posts = $stmt_user_posts->get_result();
             $('.menu-btn').click(function() {
                 $('.sidebar').toggleClass('active');
             });
-        
+            $('.menu-btn').click(function() {
+                $('.sidebar').toggleClass('active');
+            });
             // Toggle submenu
             $('.menu ul li a').click(function(e) {
                 if($(this).find('.arrow').length > 0) {
@@ -143,7 +143,7 @@ $result_user_posts = $stmt_user_posts->get_result();
                 $('.nopost-container').hide();
             }
         });
-
+        });
     </script>
 </body>
 </html>

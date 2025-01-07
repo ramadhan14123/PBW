@@ -106,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-
     <div class="main-content">
         <div class="form-container">
             <h2>Buat Postingan</h2>
@@ -121,14 +120,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js"></script>
     <script>
         $(document).ready(function() {
             $('.menu-btn').click(function() {
                 $('.sidebar').toggleClass('active');
             });
-
             // Toggle submenu
             $('.menu ul li a').click(function(e) {
                 if($(this).find('.arrow').length > 0) {
