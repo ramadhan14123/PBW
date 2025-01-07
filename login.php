@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } elseif ($user['role'] == 'admin') {
             header("Location: admin_dashboard.php?role=admin");
         } else {
-            header("Location: user_dashboard.php?role=user");
+            header("Location: user_posts.php?role=user");
         }
         exit;
     } else {

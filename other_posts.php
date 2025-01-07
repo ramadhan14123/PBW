@@ -1,51 +1,21 @@
 <?php
 session_start();
 
-// Cek apakah pengguna sudah login dan memiliki peran user
 if (!isset($_SESSION['loggedin']) || $_SESSION['role'] != 'user') {
     header("Location: login.php");
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Ambil data dari form
-    $title = $_POST['title'];
-    $image = $_FILES['image'];
-
-    // Tentukan folder tempat menyimpan gambar
-    $uploadDir = 'uploads/';
-    $uploadFile = $uploadDir . basename($image['name']);
-
-    // Pastikan file yang diupload adalah gambar
-    if (getimagesize($image['tmp_name']) !== false) {
-        // Proses gambar (upload)
-        if (move_uploaded_file($image['tmp_name'], $uploadFile)) {
-            // Koneksi ke database
-            $conn = new mysqli('localhost', 'root', '', 'user_log');
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-
-            // Siapkan query untuk menyimpan postingan baru
-            $stmt = $conn->prepare("INSERT INTO posts (user_id, title, image, created_at) VALUES (?, ?, ?, NOW())");
-            $stmt->bind_param("iss", $_SESSION['user_id'], $title, $uploadFile);
-            if ($stmt->execute()) {
-                // Setelah berhasil menyimpan, arahkan ke user_dashboard.php
-                header("Location: user_posts.php");
-                exit();
-            } else {
-                echo "Terjadi kesalahan saat menyimpan postingan.";
-            }
-
-            $stmt->close();
-            $conn->close();
-        } else {
-            echo "Gambar gagal diupload.";
-        }
-    } else {
-        echo "File yang diupload bukan gambar.";
-    }
+$conn = new mysqli('localhost', 'root', '', 'user_log');
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
+
+$query_all_posts = "SELECT posts.*, users.username 
+                    FROM posts 
+                    INNER JOIN users ON posts.user_id = users.id 
+                    ORDER BY posts.created_at DESC";
+$result_all_posts = $conn->query($query_all_posts);
 ?>
 
 <!DOCTYPE html>
@@ -53,10 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Postingan</title>
+    <title>All Posts</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="static/css/create_post.css">
+    <link rel="stylesheet" href="static/css/other_posts.css">
+   
 </head>
 <body>
     <div class="sidebar">
@@ -79,14 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="create_post.php">
                             <i class="ph-bold ph-plus-circle"></i>
                             <span class="text">Create Post</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="other_posts.php">
+                    <li class="active">
+                        <a href="#">
                             <i class="ph-bold ph-globe"></i>
                             <span class="text">Explore</span>
                         </a>
@@ -96,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="menu">
                 <p class="title">Settings</p>
                 <ul>
+
                     <li>
                         <a href="logout.php">
                             <i class="ph-bold ph-sign-out"></i>
@@ -108,17 +80,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <div class="main-content">
-        <div class="form-container">
-            <h2>Buat Postingan</h2>
-            <form method="POST" enctype="multipart/form-data">
-                <label for="title">Judul Postingan</label>
-                <input type="text" name="title" id="title" required><br><br>
-
-                <label for="image">Gambar Postingan</label>
-                <input type="file" name="image" id="image" accept="image/*" required><br><br>
-
-                <button type="submit">Buat Postingan</button>
-            </form>
+        <div class="masonry-grid">
+            <?php if ($result_all_posts->num_rows > 0): 
+                while ($post = $result_all_posts->fetch_assoc()): ?>
+                    <div class="pin">
+                        <?php if (!empty($post['image'])): ?>
+                            <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image" class="pin-image">
+                        <?php endif; ?>
+                        <div class="pin-content">
+                            <div class="pin-title"><?php echo htmlspecialchars($post['title']); ?></div>
+                            <div class="pin-author">
+                                <i class="ph-bold ph-user"></i> 
+                                <?php echo htmlspecialchars($post['username']); ?>
+                            </div>
+                            <div class="pin-date">
+                                <i class="ph-bold ph-clock"></i> 
+                                <?php echo date('d M Y', strtotime($post['created_at'])); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endwhile;
+            else: ?>
+                <div class="no-posts">
+                    <i class="ph-bold ph-image" style="font-size: 48px; color: var(--gold); margin-bottom: 20px;"></i>
+                    <h2>No Posts Yet</h2>
+                    <p>There are no posts to display at the moment.</p>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -139,6 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     </script>
 </body>
-    </script>
-</body>
 </html>
+
+<?php
+$conn->close();
+?>

@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Cek apakah pengguna sudah login dan memiliki peran admin
 if (!isset($_SESSION['loggedin']) || $_SESSION['role'] != 'admin') {
     header("Location: login.php");
     exit();
@@ -12,60 +11,74 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Ambil statistik jumlah pengguna
 $total_users = $conn->query("SELECT COUNT(id) AS total FROM users")->fetch_assoc();
-
-// Ambil statistik jumlah postingan
 $total_posts = $conn->query("SELECT COUNT(id) AS total FROM posts")->fetch_assoc();
-
-// Ambil data postingan
 $result_posts = $conn->query("SELECT * FROM posts");
-
-echo "<h1>Admin Dashboard</h1>";
-echo "<a href='logout.php'>Logout</a><br><br>";
-
-// Tampilkan statistik pengguna dan postingan
-echo "<h3>Statistics</h3>";
-echo "<p>Total Users: " . $total_users['total'] . "</p>";
-echo "<p>Total Posts: " . $total_posts['total'] . "</p>";
-
-echo "<hr>";
-
-// **Menampilkan Daftar Postingan**
-echo "<h3>Manage Posts</h3>";
-echo "<table border='1'>
-        <tr>
-            <th>Title</th>
-            <th>User</th>
-            <th>Date Created</th>
-            <th>Image</th>
-            <th>Actions</th>
-        </tr>";
-
-while ($post = $result_posts->fetch_assoc()) {
-    // Ambil nama pengguna berdasarkan user_id
-    $user_stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
-    $user_stmt->bind_param("i", $post['user_id']);
-    $user_stmt->execute();
-    $user_result = $user_stmt->get_result();
-    $user_name = $user_result->fetch_assoc()['username'];
-
-    // Menampilkan gambar jika ada
-    $image = !empty($post['image']) ? "<img src='{$post['image']}' alt='Image' width='100'/>" : "No Image";
-
-
-    echo "<tr>
-            <td>" . htmlspecialchars($post['title']) . "</td>
-            <td>" . htmlspecialchars($user_name) . "</td>
-            <td>" . $post['created_at'] . "</td>
-            <td>" . $image . "</td>
-            <td>
-                <a href='edit_post.php?id=" . $post['id'] . "'>Edit</a> | 
-                <a href='delete_post.php?id=" . $post['id'] . "' onclick=\"return confirm('Are you sure you want to delete this post?');\">Delete</a>
-            </td>
-          </tr>";
-}
-echo "</table>";
-
-$conn->close();
 ?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="static/css/admin_dash.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+            <a href="logout.php" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-number"><?php echo $total_users['total']; ?></div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-file-alt"></i>
+                <div class="stat-number"><?php echo $total_posts['total']; ?></div>
+                <div class="stat-label">Total Posts</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Manage Posts</h2>
+        <div class="posts-container">
+            <?php while ($post = $result_posts->fetch_assoc()): 
+                $user_stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
+                $user_stmt->bind_param("i", $post['user_id']);
+                $user_stmt->execute();
+                $user_result = $user_stmt->get_result();
+                $user_name = $user_result->fetch_assoc()['username'];
+            ?>
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-title"><?php echo htmlspecialchars($post['title']); ?></div>
+                        <div class="post-meta">
+                            <i class="fas fa-user"></i> <?php echo htmlspecialchars($user_name); ?><br>
+                            <i class="fas fa-calendar"></i> <?php echo date('d M Y', strtotime($post['created_at'])); ?>
+                        </div>
+                    </div>
+                    <?php if (!empty($post['image'])): ?>
+                    <div class="post-image-container">
+                        <img src="<?php echo $post['image']; ?>" alt="Post image" class="post-image">
+                    </div>
+                    <?php endif; ?>
+                    <div class="post-actions">
+                        <a href="delete_post.php?id=<?php echo $post['id']; ?>" onclick="return confirm('Are you sure you want to delete this post?');" class="delete-btn">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        </div>
+    </div>
+</body>
+</html>
+
+<?php $conn->close(); ?>

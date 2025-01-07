@@ -36,7 +36,7 @@ if (isset($_GET['id'])) {
         $delete_stmt->bind_param("i", $post_id);
         if ($delete_stmt->execute()) {
             echo "Post deleted successfully.";
-            header("Location: " . ($_SESSION['role'] == 'admin' ? 'admin_dashboard.php' : 'user_dashboard.php'));
+            header("Location: " . ($_SESSION['role'] == 'admin' ? 'admin_dashboard.php' : 'user_posts.php'));
         } else {
             echo "Error deleting post: " . $delete_stmt->error;
         }
