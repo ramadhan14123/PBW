@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param("iss", $_SESSION['user_id'], $title, $uploadFile);
             if ($stmt->execute()) {
                 // Setelah berhasil menyimpan, arahkan ke user_dashboard.php
-                header("Location: user_dashboard.php");
+                header("Location: user_posts.php");
                 exit();
             } else {
                 echo "Terjadi kesalahan saat menyimpan postingan.";
